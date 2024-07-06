@@ -144,19 +144,40 @@ def generar_acta():
 def main():
     while True:
         opcion = mostrar_menu()
+        csv_cargado = False
+        promedios_calculados = False
         if opcion == 1:
             cargar_csv()
+            csv_cargado = True
         elif opcion == 2:
-            registrar_estudiante()
+            if csv_cargado:
+                registrar_estudiante()
+            else:
+                print("Debes procesar la lista de estudiantes primero!")
         elif opcion == 3:
-            modificar_nota()
+            if csv_cargado:
+                modificar_nota()
+            else:
+                print("Debes procesar la lista de estudiantes primero!")
         elif opcion == 4:
-            eliminar_estudiante()
+            if csv_cargado:
+                eliminar_estudiante()
+            else:
+                print("Debes procesar la lista de estudiantes primero!")
         elif opcion == 5:
-            generar_promedio()
+            if csv_cargado:
+                generar_promedio()
+                promedios_calculados = True
+            else:
+                print("Debes procesar la lista de estudiantes primero!")
         elif opcion == 6:
-            #Esta opcion no puede funcionar si no se ha calculado promedio
-            generar_acta()
+            if csv_cargado:
+                if promedios_calculados:
+                    generar_acta()
+                else:
+                    print("Debes calcular los promedios primero!")
+            else:
+                print("Debes procesar la lista de estudiantes primero!")
         elif opcion == 7:
             print("Adiós!")
             break
