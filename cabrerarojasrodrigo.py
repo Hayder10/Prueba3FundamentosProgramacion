@@ -116,6 +116,31 @@ def eliminar_estudiante():
         csv_data.remove(estudiante)
         print("Estudiante eliminado satisfactoriamente.")
 
+def generar_promedio():
+    for alumno in csv_data:
+        promedio = alumno["Nota 1"] + alumno["Nota 2"]
+        promedio = round(promedio / 2,1)
+        alumno["Promedio"] = promedio
+    print("Promedios calculados con éxito.")
+
+def agregar_estado_alumno():
+    csv_data_nueva = csv_data
+    for alumno in csv_data_nueva:
+        if alumno["Promedio"] >= 4.0:
+            alumno["Estado"] = "Aprobado"
+        elif alumno["Promedio"] < 4.0:
+            alumno["Estado"] = "Reprobado"
+    return csv_data_nueva
+
+
+def generar_acta():
+    with open("Acta_cierre_5b.csv","w") as nuevo_archivo:
+        nuevo_csv = agregar_estado_alumno()
+        nuevo_archivo = csv.DictWriter(nuevo_archivo,nuevo_csv[0].keys())
+        nuevo_archivo.writeheader()
+        nuevo_archivo.writerows(nuevo_csv)
+    print("Acta generada satisfactoriamente.")
+        
 def main():
     while True:
         opcion = mostrar_menu()
@@ -128,9 +153,10 @@ def main():
         elif opcion == 4:
             eliminar_estudiante()
         elif opcion == 5:
-            pass
+            generar_promedio()
         elif opcion == 6:
-            pass
+            #Esta opcion no puede funcionar si no se ha calculado promedio
+            generar_acta()
         elif opcion == 7:
             print("Adiós!")
             break
