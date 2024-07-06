@@ -26,6 +26,7 @@ def cargar_csv():
             csv_data.append(alumno)
 
 def validar_rut():
+    #TODO: falta agregar validacion por cantidad de numeros dentro de un grupo spliteado por punto (min 1 max 3)
     while True:
         rut = input("Ingrese el RUT del estudiante (XX.XXX.XXX-X): ")
         if "." not in rut or "-" not in rut or rut[-1] == "-":
@@ -36,19 +37,71 @@ def validar_rut():
 def validar_nombre():
     while True:
         nombre = input("Ingrese el nombre y el apellido del estudiante: ")
-        nombre_separado = nombre.split(" ")
+        nombre_separado = nombre.strip().split(" ")
         if len(nombre_separado) != 2 or (nombre_separado[0] == "" or nombre_separado[1] == ""):
             print("Ingrese un nombre y un apellido válidos! (El estudiante debe tener Nombre y Apellido)")
         else:
-            return nombre
+            return " ".join(nombre_separado)
+
+def validar_nota(n_nota = None):
+    while True:
+        try:
+            if n_nota: nota = float(input(f"Ingrese la Nota N°{n_nota} (separado por un punto): "))
+            else: nota = float(input(f"Ingrese la nueva nota (separado por un punto): "))
+            if nota < 1.0 or nota > 7.0: print("Ingrese una nota válida! (1.0 - 7.0)")
+            else: return nota
+        except:
+            print("Ingrese una nota válida! (Separado por un punto)")
 
 def registrar_estudiante():
     nuevo_estudiante = {}
     rut = validar_rut()
     nombre = validar_nombre()
-    print(rut)
-    print(nombre)
-        
+    nota_1 = validar_nota(1)
+    nota_2 = validar_nota(2)
+    nuevo_estudiante["Rut"] = rut
+    nuevo_estudiante["Nombre"] = nombre
+    nuevo_estudiante["Nota 1"] = nota_1
+    nuevo_estudiante["Nota 2"] = nota_2
+    csv_data.append(nuevo_estudiante)
+    print("Estudiante ingresado exitosamente.")
+
+def buscar_estudiante_rut(rut):
+    for estudiante in csv_data:
+        if estudiante["Rut"] == rut:
+            return estudiante
+    return False
+
+def modificar_nota():
+    while True:
+        rut = validar_rut()
+        estudiante = buscar_estudiante_rut(rut)
+        if not estudiante: print("Estudiante no encontrado. Inténtelo nuevamente.")
+        else: break
+
+    while True:
+        try:
+            opcion = int(input("Ingrese el N° de la Nota a modificar (1-2): "))
+            if opcion > 2 or opcion < 1: print("Ingrese un número de nota válido! (1-2)")
+            else: break
+        except:
+            print("Ingrese un número de nota válido! (1-2)")
+
+    if opcion == 1:
+        nueva_nota = validar_nota()
+        estudiante["Nota 1"] = nueva_nota
+    elif opcion == 2:
+        nueva_nota = validar_nota()
+        estudiante["Nota 2"] = nueva_nota
+
+    print("Nota del estudiante modificada satisfactoriamente.")
+
+def eliminar_estudiante():
+    while True:
+        rut = validar_rut()
+        estudiante = buscar_estudiante_rut(rut)
+        if not estudiante: print("Estudiante no encontrado. Inténtelo nuevamente.")
+        else: break
 
 def main():
     while True:
@@ -58,9 +111,9 @@ def main():
         elif opcion == 2:
             registrar_estudiante()
         elif opcion == 3:
-            pass
+            modificar_nota()
         elif opcion == 4:
-            pass
+            eliminar_estudiante()
         elif opcion == 5:
             pass
         elif opcion == 6:
