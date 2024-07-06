@@ -96,12 +96,25 @@ def modificar_nota():
 
     print("Nota del estudiante modificada satisfactoriamente.")
 
+
 def eliminar_estudiante():
     while True:
         rut = validar_rut()
         estudiante = buscar_estudiante_rut(rut)
         if not estudiante: print("Estudiante no encontrado. Inténtelo nuevamente.")
         else: break
+    
+    print(f"¿Está seguro de eliminar a {estudiante["Nombre"]}?")
+    while True:
+        opcion = input("Ingrese su opción (Si / No): ").lower().strip()
+        print(opcion)
+        if opcion != "si" and opcion != "no": print("Ingrese una opción válida! (Si / No)")
+        else: break
+    if opcion == "no": 
+        return
+    elif opcion == "si":
+        csv_data.remove(estudiante)
+        print("Estudiante eliminado satisfactoriamente.")
 
 def main():
     while True:
